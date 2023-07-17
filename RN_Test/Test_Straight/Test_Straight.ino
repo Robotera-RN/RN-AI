@@ -1,13 +1,16 @@
 #include <RN.h>
-
+#include <NewPing.h>
+#include <SoftwareSerial.h>
 // Create instances of RN classes for ultrasonic sensors, motor, and servo
-RN ultraSensorF(14, 15);
-RN ultraSensorR(16, 17);
-RN ultraSensorL(18,19);
-RN motor(7, 8, 9);
+NewPing ultraSensorF(14, 15);
+NewPing ultraSensorR(16, 17);
+NewPing ultraSensorL(18,19);
+RN motor(8, 9, 10);
 const int servoPin =2;
 RN servoController(servoPin);
-
+float distanceF = 0;
+float distanceR = 0;
+float distanceL = 0;
 // Set initial servo position to straight
 int servoPosition = 75;
 
@@ -23,59 +26,47 @@ void setup() {
 
 void loop() {
   // Read the distances from the ultrasonic sensors
-  float distanceF = ultraSensorF.getDistance();
-  float distanceR = ultraSensorR.getDistance();
-  float distanceL = ultraSensorL.getDistance();
+  distanceF = ultraSensorF.ping_cm();
+  distanceR = ultraSensorR.ping_cm();
+  distanceL = ultraSensorL.ping_cm();
 
-  // Print the distances to the serial monitor
+Serial.println("Forward: ");
+Serial.println(distanceF);
+
+Serial.println("Left: ");
+Serial.println(distanceL);
+
+Serial.println("Right: ");
+Serial.println(distanceR);
+  /* Print the distances to the serial monitor
   Serial.println("Front Sensor");
   Serial.println(distanceF);
   Serial.println("Right Sensor ");
   Serial.println(distanceR);
   Serial.println("Left Sensor");
   Serial.println(distanceL);
-
-
+*/
   // Determine the servo position based on the distances
-  if (distanceF > 80) {
-    if (distanceL > distanceR && (distanceR < 15 || distanceL < 15)) {
-      servoPosition = 25;
-      servoController.setServoPosition(servoPosition);
-
-      Serial.println("Left");
-    } else if (distanceR > distanceL && (distanceR < 15 || distanceL < 15)) {
-      servoPosition = 125;
-      servoController.setServoPosition(servoPosition);
-      Serial.println("Right");
-    } else {
+  if (distanceF > 100) {
       servoPosition = 75;
       servoController.setServoPosition(servoPosition);
-      Serial.println("Straight");
-    }
-
     // Set the servo position and move forward at a slower speed
-    motor.setMotorDirection(-1);
-    motor.setMotorSpeed(255);
-    Serial.println("Forward");
-  } else {
-    if (distanceL < distanceR && (distanceR < 15 || distanceL < 15)) {
-      servoPosition = 25;
-      servoController.setServoPosition(servoPosition);
-      Serial.println("Right");
-    } else if (distanceR < distanceL && (distanceR < 15 || distanceL < 15)) {
-      servoPosition = 125;
-      servoController.setServoPosition(servoPosition);
-      Serial.println("Left");
-    } else {
-      servoPosition = 75;
-      servoController.setServoPosition(servoPosition);
-      Serial.println("Straight");
-    }
-
-    // Set the servo position and move backward at a slower speed
     motor.setMotorDirection(1);
-    motor.setMotorSpeed(255);
-    delay(2000);
-    Serial.println("Reverse");
+    motor.setMotorSpeed(200);
+    Serial.println("Forward");
   }
-}
+ else if(distanceF < 100 && distanceF > 50){
+    servoController.setServoPosition(25);
+      Serial.println("Turn Leff");
+ }
+   else if(distanceL < 30 && distanceR < 39){
+     motor.stopMotor();
+  } 
+  else{
+     motor.stopMotor();
+     
+
+  }
+delayMicroseconds(1);
+    
+  }

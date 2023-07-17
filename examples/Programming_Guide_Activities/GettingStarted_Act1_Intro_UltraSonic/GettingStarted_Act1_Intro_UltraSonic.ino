@@ -1,6 +1,6 @@
 #include <RN.h>
 
-RN sensor(18, 19); // create an instance of RN class with trig pin 2 and echo pin 3
+RN sensor(14, 15); // create an instance of RN class with trig pin 2 and echo pin 3
 
 void setup() { 
   Serial.begin(9600);

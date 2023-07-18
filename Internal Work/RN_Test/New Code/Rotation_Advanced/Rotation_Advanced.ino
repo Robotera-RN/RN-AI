@@ -1,9 +1,8 @@
 #include <RN.h>
-#include <NewPing.h>
 
-NewPing ultraSensorF(14, 15); // create an instance of RN class with trig pin 2 and echo pin 3
-NewPing ultraSensorL(16, 17); // create an instance of RN class with trig pin 2 and echo pin 3
-NewPing ultraSensorR(18, 19); // create an instance of RN class with trig pin 2 and echo pin 3
+RN ultraSensorF(14, 15); // create an instance of RN class with trig pin 2 and echo pin 3
+RN ultraSensorL(16, 17); // create an instance of RN class with trig pin 2 and echo pin 3
+RN ultraSensorR(18, 19); // create an instance of RN class with trig pin 2 and echo pin 3
 RN motor( 8, 9, 10); // create a new instance of the RN class
 
 // Define the pin connected to the servo motor
@@ -20,32 +19,58 @@ int rightDist=40;
 RN servoController(servoPin);
 // A function that checks the distance read by a sensor and returns a boolean value indicating whether it is within the required range
 bool check_distance(int i){
- float f = ultraSensorF.ping_cm();
- float r = ultraSensorR.ping_cm();
- float l = ultraSensorL.ping_cm();
-    Serial.print("Distance Front: ");
+  float f = ultraSensorF.getDistance();
+  float r = ultraSensorR.getDistance();
+  float l = ultraSensorL.getDistance();
+  /*Serial.print("Distance Front: ");
   Serial.print(f);
   Serial.print(" cm");
   Serial.print("  Distance Right: ");
   Serial.print(r);
   Serial.print(" cm");
   Serial.print("  Distance Left: ");
-  Serial.println(l);
+  Serial.println(l);*/
+  
+  bool condition = false;
+  
   switch(i){
     case 1:
-      return f < 40 || r < 20 || l < 20;
+      Serial.print(" Case: 1");
+      condition = f < 40 || r < 20 || l < 20;
+      Serial.print("condition: ");
+      Serial.println(condition);
+      return condition;
       break;
     case 2:
-      return l >= 20 && l < 40;
+      Serial.print(" Case: 2");
+      condition = l >= 20 && l <= 40;
+      Serial.print("condition: ");
+      Serial.println(condition);
+      return condition;
       break;
     case 3:
-      return r >= 20 && r < 40;
+      Serial.print(" Case: 3");
+      condition = r >= 20 && r <= 40;
+      Serial.print("condition: ");
+      Serial.println(condition);
+      return condition;
       break;
-    default:
-      Serial.println("Forward");
-      return f >= 40 && f < 80;
+    case 4:
+      Serial.print(" Case: 4");
+      condition = f >= 40 && f <= 80 && r > 40 && l > 40;
+      Serial.print("condition: ");
+      Serial.println(condition);
+      return condition;
+      break;
+      case 5:
+      Serial.print(" Case: 5");
+      condition = f > 80 && r > 40 && l > 40;
+      Serial.print("condition: ");
+      Serial.println(condition);
+      return condition;
       break;
   }
+
 }
 // A function that sets the motor speed and direction and moves the servo motor to the desired angle
 void move(int s,int d,int p){
@@ -74,13 +99,11 @@ void loop() {
   if(check_distance(1)){
     motor.stopMotor();
     Serial.println("Stop");
-        servoController.setServoPosition(80);  // Adjust the value as desired
-
     delay(1000);
   }
   else if(check_distance(2)){
           Serial.println("Left");
-  move(200,1,50);
+          move(200,1,50);
    
   }
   else if(check_distance(3)){
@@ -89,10 +112,24 @@ void loop() {
     move(200,1,110);
   }
    else if(check_distance(4)){
-              Serial.println("Forward");
+              Serial.println("Left2");
 
-    move(200,1,80);
+      move(200,1,50);
+      
   
 }
-delay(1000);
+  else if(check_distance(5)){
+              Serial.println("Forward");
+
+      move(200,1,80);
+      
+  
+}
+  else{
+    motor.stopMotor();
+    Serial.println("Stop2");
+    delay(1000);
+  }
+
+
 }

@@ -3,11 +3,6 @@
 
 #include "Arduino.h"
 #include <Servo.h>
-#include "HUSKYLENS.h"//---------------
-#include "SoftwareSerial.h"//---------------
-
-
-
 
 
 class RN {
@@ -40,16 +35,6 @@ class RN {
     
    
 };
-
-class RNCam { //--------------
-  public:
-    RNCam(int TCamPin, int RCamPin);
-    int getCamColorID();
-    void cambegin();
-  private:
-    int _TCamPin,_RCamPin,camColorID;
-
-  };
 
 #endif
 

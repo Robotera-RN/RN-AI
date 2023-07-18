@@ -1,10 +1,5 @@
 #include "Arduino.h"
 #include "RN.h"
-#include "HUSKYLENS.h"//---------------
-#include "SoftwareSerial.h"//---------------
-
-
-
 
 RN::RN(int motorPin1, int motorPin2, int speedPin)
 {
@@ -135,24 +130,3 @@ void RN::stopMotor()
   digitalWrite(_motorPin1, LOW);
   digitalWrite(_motorPin2, LOW);
 }
-
-RNCam::RNCam(int TCamPin, int RCamPin)//-------------
-{
- _TCamPin=TCamPin;
- _RCamPin=RCamPin;
-
-}  
-
-/*void RNCam::cambegin() {
-  
-
-
-}
-
-int RNCam::getCamColorID() {  //-----------------
-
-
-
-
-  return camColorID;
-}*/
